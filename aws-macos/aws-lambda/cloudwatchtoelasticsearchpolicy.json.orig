@@ -1,0 +1,3 @@
+{
+    "Policy": "{\"Version\":\"2012-10-17\",\"Id\":\"default\",\"Statement\":[{\"Sid\":\"InvokePermissionsForCWLf9bbec594df203518b6e149c8eedbc6f\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"logs.region.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:region:account-id:function:LogsToElasticsearch_endpointlogs\",\"Condition\":{\"StringEquals\":{\"AWS:SourceAccount\":\"account\"},\"ArnLike\":{\"AWS:SourceArn\":\"arn:aws:logs:region:account-id:log-group:endpointlogs:*\"}}}]}"
+}

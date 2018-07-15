@@ -1,0 +1,41 @@
+{
+    "description": "Santa Log Parsing",
+    "processors": [
+      {
+        "grok": {
+          "field": "message",
+          "patterns": ["%{SYSLOG5424SD:timestamp} I %{WORD:src}: action=%{WORD:action}\\|decision=%{WORD:decision}\\|reason=%{WORD:reason}\\|sha256=%{WORD:sha256}\\|cert_sha256=%{WORD:cert_sha256}\\|cert_cn=%{GREEDYDATA:cert_cn}\\|pid=%{INT:pid}\\|ppid=%{INT:ppid}\\|uid=%{INT:uid}\\|user=%{GREEDYDATA:user}\\|gid=%{INT:gid}\\|group=%{GREEDYDATA:group}\\|mode=%{GREEDYDATA:mode}\\|path=%{GREEDYDATA:path}"],
+          "on_failure": [
+            {
+              "grok": {
+                "field": "message",
+                "patterns": [
+                  "%{SYSLOG5424SD:timestamp} I %{WORD:src}: action=%{WORD:action}\\|decision=%{WORD:decision}\\|reason=%{WORD:reason}\\|sha256=%{WORD:sha256}\\|pid=%{INT:pid}\\|ppid=%{INT:ppid}\\|uid=%{INT:uid}\\|user=%{GREEDYDATA:user}\\|gid=%{INT:gid}\\|group=%{GREEDYDATA:group}\\|mode=%{GREEDYDATA:mode}\\|path=%{GREEDYDATA:path}"
+                ]
+              }
+            },
+            {
+              "set": {
+                "field": "cert_cn",
+                "value": "Unsigned"
+              }
+            },
+            {
+              "set": {
+                "field": "cert_sha256",
+                "value": "Unsigned"
+              }
+            },
+            {
+              "date": {
+                "field": "timestamp",
+                "formats": [
+                  "basic_date_time"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }

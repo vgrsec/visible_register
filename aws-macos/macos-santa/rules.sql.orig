@@ -1,0 +1,6 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE IF NOT EXISTS 'rules' ('shasum' TEXT NOT NULL, 'state' INTEGER NOT NULL, 'type' INTEGER NOT NULL, 'custommsg' TEXT);
+INSERT INTO rules VALUES('2aa4b9973b7ba07add447ee4da8b5337c3ee2c3a991911e80e7282e8a751fc32',1,2,NULL);
+CREATE UNIQUE INDEX rulesunique ON rules (shasum, type);
+COMMIT;

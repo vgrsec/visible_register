@@ -1,0 +1,18 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "*"
+      },
+      "Action": "es:*",
+      "Resource": "arn:aws:es:region:account-id:domain/endpointlogs/*",
+      "Condition": {
+        "IpAddress": {
+          "aws:SourceIp": "ipaddress/32"
+        }
+      }
+    }
+  ]
+}

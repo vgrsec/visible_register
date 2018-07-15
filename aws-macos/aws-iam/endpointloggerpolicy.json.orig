@@ -1,0 +1,27 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "",
+            "Effect": "Allow",
+            "Action": "logs:DescribeLogGroups",
+            "Resource": "arn:aws:logs:region:account-id:*"
+        },
+        {
+            "Sid": "",
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "logs:DescribeLogStreams"
+            ],
+            "Resource": "arn:aws:logs:region:account-id:log-group:endpointlogs:*:*"
+        },
+        {
+            "Sid": "",
+            "Effect": "Deny",
+            "Action": "*",
+            "NotResource": "arn:aws:logs:region:account-id:log-group:*"
+        }
+    ]
+}

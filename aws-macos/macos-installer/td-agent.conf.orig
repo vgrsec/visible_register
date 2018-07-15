@@ -1,0 +1,22 @@
+<source>
+  type forward
+</source>
+
+<source>
+  @type tail
+  path /var/db/santa/santa.log
+  pos_file /var/log/td-agent/santa.log.pos
+  tag santa.log
+  format none
+  encoding UTF-8
+</source>
+
+<match **>
+  type cloudwatch_logs
+  region blankregion
+  aws_key_id blankaccesskey
+  aws_sec_key blanksecretkey
+  log_group_name endpointlogs
+  log_stream_name %{hostname}
+  auto_create_stream true
+</match>

@@ -1,0 +1,12 @@
+# ignore files post configuration and may contain secrets
+./aws-macos/aws-elasticsearch62/elasticsearch.json
+./aws-macos/aws-elasticsearch62/elasticsearchaccesspolicy.json
+./aws-macos/aws-iam/endpointloggerpolicy.json
+./aws-macos/aws-iam/endpointlogger.json
+./aws-macos/aws-iam/lambdaelasticsearchpolicy.json
+./aws-macos/aws-lambda/cloudwatchtoelasticsearchpolicy.json
+./aws-macos/aws-lambda/index.js
+./aws-macos/aws-lambda/index.js.zip
+./aws-macos/macos-installer/installer.sh
+./azure-windows/azure-log-analytics/step-1-powerbi-query.txt
+./azure-windows/windows-installer/installer.ps1

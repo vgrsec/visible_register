@@ -1,0 +1,41 @@
+/*
+The exported Power Query Formula Language (M Language) can be used with Power Query in Excel
+and Power BI Desktop.
+For Power BI Desktop follow the instructions below: 
+1) Download Power BI Desktop from https://powerbi.microsoft.com/desktop/
+2) In Power BI Desktop select: 'Get Data' -> 'Blank Query'->'Advanced Query Editor'
+3) Paste the M Language script into the Advanced Query Editor and select 'Done'
+*/
+
+
+let AnalyticsQuery =
+let Source = Json.Document(Web.Contents("https://api.loganalytics.io/v1/workspaces/WORKSPACEIDVAR/query", 
+[Query=[#"query"="search *",#"x-ms-app"="OmsAnalyticsPBI",#"timespan"="P1D",#"prefer"="ai.response-thinning=true"],Timeout=#duration(0,0,4,0)])),
+TypeMap = #table(
+{ "AnalyticsTypes", "Type" }, 
+{ 
+{ "string",   Text.Type },
+{ "int",      Int32.Type },
+{ "long",     Int64.Type },
+{ "real",     Double.Type },
+{ "timespan", Duration.Type },
+{ "datetime", DateTimeZone.Type },
+{ "bool",     Logical.Type },
+{ "guid",     Text.Type }
+}),
+DataTable = Source[tables]{0},
+Columns = Table.FromRecords(DataTable[columns]),
+ColumnsWithType = Table.Join(Columns, {"type"}, TypeMap , {"AnalyticsTypes"}),
+Rows = Table.FromRows(DataTable[rows], Columns[name]), 
+Table = Table.TransformColumnTypes(Rows, Table.ToList(ColumnsWithType, (c) => { c{0}, c{3}}))
+in
+Table,
+    #"Filtered Rows" = Table.SelectRows(AnalyticsQuery, each ([Source] = "Microsoft-Windows-AppLocker")),
+    #"Filtered Rows1" = Table.SelectRows(#"Filtered Rows", each [EventLevel] = 2),
+    #"Replaced Value" = Table.ReplaceValue(#"Filtered Rows1","/","",Replacer.ReplaceText,{"ParameterXml"}),
+    #"Split Column by Delimiter" = Table.SplitColumn(#"Replaced Value", "ParameterXml", Splitter.SplitTextByDelimiter("<Param>", QuoteStyle.Csv), {"ParameterXml.1", "ParameterXml.2", "ParameterXml.3", "ParameterXml.4", "ParameterXml.5", "ParameterXml.6", "ParameterXml.7", "ParameterXml.8", "ParameterXml.9", "ParameterXml.10", "ParameterXml.11", "ParameterXml.12", "ParameterXml.13", "ParameterXml.14", "ParameterXml.15", "ParameterXml.16", "ParameterXml.17", "ParameterXml.18", "ParameterXml.19", "ParameterXml.20", "ParameterXml.21", "ParameterXml.22", "ParameterXml.23", "ParameterXml.24", "ParameterXml.25", "ParameterXml.26", "ParameterXml.27", "ParameterXml.28", "ParameterXml.29", "ParameterXml.30", "ParameterXml.31", "ParameterXml.32", "ParameterXml.33"}),
+    #"Changed Type" = Table.TransformColumnTypes(#"Split Column by Delimiter",{{"ParameterXml.1", type text}, {"ParameterXml.2", Int64.Type}, {"ParameterXml.3", type text}, {"ParameterXml.4", type text}, {"ParameterXml.5", type text}, {"ParameterXml.6", type text}, {"ParameterXml.7", type text}, {"ParameterXml.8", Int64.Type}, {"ParameterXml.9", type text}, {"ParameterXml.10", type text}, {"ParameterXml.11", type text}, {"ParameterXml.12", Int64.Type}, {"ParameterXml.13", type text}, {"ParameterXml.14", type text}, {"ParameterXml.15", type text}, {"ParameterXml.16", type text}, {"ParameterXml.17", type text}, {"ParameterXml.18", Int64.Type}, {"ParameterXml.19", type text}, {"ParameterXml.20", Int64.Type}, {"ParameterXml.21", type text}, {"ParameterXml.22", type text}, {"ParameterXml.23", type text}, {"ParameterXml.24", Int64.Type}, {"ParameterXml.25", type text}, {"ParameterXml.26", type text}, {"ParameterXml.27", type text}, {"ParameterXml.28", Int64.Type}, {"ParameterXml.29", type text}, {"ParameterXml.30", type text}, {"ParameterXml.31", type text}, {"ParameterXml.32", type text}, {"ParameterXml.33", type text}}),
+    #"Split Column by Delimiter1" = Table.SplitColumn(#"Changed Type", "ParameterXml.30", Splitter.SplitTextByDelimiter("\", QuoteStyle.Csv), {"ParameterXml.30.1", "ParameterXml.30.2", "ParameterXml.30.3", "ParameterXml.30.4"}),
+    #"Changed Type1" = Table.TransformColumnTypes(#"Split Column by Delimiter1",{{"ParameterXml.30.1", type text}, {"ParameterXml.30.2", type text}, {"ParameterXml.30.3", type text}, {"ParameterXml.30.4", type text}})
+in
+    #"Changed Type1"

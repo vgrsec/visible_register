@@ -1,0 +1,25 @@
+<# 
+Author:         VGR
+Date:           20180528
+Script:         installloganalyticsagent.ps1
+Version:        n/a 
+Twitter:        @VGRSEC
+Inspired by:    Daniel Örneling 
+Source:         https://gallery.technet.microsoft.com/scriptcenter/Install-OMS-Agent-with-2c9c99ab
+Inspired By:    Bulent Ozkir
+Source          https://blogs.technet.microsoft.com/bulentozkir/2017/07/03/install-oms-log-analytics-agent-and-oms-dependency-agent-to-all-windows-vms-in-the-subscription-using-powershell/
+#> 
+
+$AzureOMSWorkspaceID = "WORKSPACEIDVAR"
+$AzureOMSWorkspacePrimaryKey = "PRIMARYKEYVAR"
+
+$OMSInstallerFileName = "MMASetup-AMD64.exe"
+$OMSFolder = "$env:temp\OMS"+ (Get-Random -Maximum 99999)
+$OMSFile = $OMSFolder + "\" + $OMSInstallerFileName
+$OMSInstallerURL = "https://go.microsoft.com/fwlink/?LinkId=828603"
+$OMSInstallerArgumentList = '/C:"setup.exe /qn ADD_OPINSIGHTS_WORKSPACE=1 '+  "OPINSIGHTS_WORKSPACE_ID=$AzureOMSWorkspaceID " + "OPINSIGHTS_WORKSPACE_KEY=$AzureOMSWorkspacePrimaryKey " +'AcceptEndUserLicenseAgreement=1"' 
+
+
+New-Item $OMSFolder -type Directory -Force | Out-Null
+Invoke-WebRequest -Uri $OMSInstallerURL -OutFile $OMSFile | Out-Null
+Start-Process $OMSFile -ArgumentList $OMSInstallerArgumentList -ErrorAction Stop -Wait | Out-Null 

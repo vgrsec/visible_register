@@ -1,0 +1,58 @@
+#!/bin/bash
+
+#Set Variables
+TDAGENTVER=3.1.1-0
+SANTAVER=0.9.24
+AWSKEYID=blankaccesskey
+AWSSECRETKEY=blanksecretkey
+AWSREGION=blankregion
+
+
+#Download the binaries
+TDAGENTINSTALLDIR=$TMPDIR/$(uuidgen)
+SANTAINSTALLDIR=$TMPDIR/$(uuidgen)
+mkdir -p $TDAGENTINSTALLDIR/mount
+mkdir -p $SANTAINSTALLDIR/mount
+cd $TDAGENTINSTALLDIR
+curl http://packages.treasuredata.com.s3.amazonaws.com/3/macosx/td-agent-$TDAGENTVER.dmg -o $TDAGENTINSTALLDIR/td-agent-$TDAGENTVER.dmg
+cd $SANTAINSTALLDIR
+curl -L https://github.com/google/santa/releases/download/$SANTAVER/santa-$SANTAVER.dmg -o $SANTAINSTALLDIR/santa-$SANTAVER.dmg
+
+#echo "aea92474070fc973315228dde287a32111d29cb52f4a94bc7f73cfa73d88afc8  td-agent-3.1.1-0.dmg" > "$TDAGENTINSTALLDIR/td-agent-3.1.1-0.sha256"
+#echo "53988973e13a48d6bdf2f6f5700c4685c4b0c9c398a0dfc6effe0cf3973ae46b  santa-0.9.24.dmg" > "$SANTAINSTALLDIR/santa-0.9.24.sha256"
+
+#cd $TDAGENTINSTALLDIR
+#shasum -c "$TDAGENTINSTALLDIR/td-agent-3.1.1-0.sha256"
+#cd $SANTAINSTALLDIR
+#shasum -c "$SANTAINSTALLDIR/santa-0.9.24.sha256"
+
+#Check integrity of binaries
+#if [[ $(shasum -c "$TDAGENTINSTALLDIR/td-agent-3.1.1-0.sha256" | grep OK) = *FAILED* ]]; then
+#  echo "fail"
+#  rm -r $TDAGENTINSTALLDIR
+#  exit 1
+#fi
+
+#if [[ $(shasum -c "$SANTAINSTALLDIR/santa-0.9.24.sha256" | grep OK) = *FAILED* ]]; then
+#  echo "fail"
+#  rm -r $SANTAINSTALLDIR
+#  exit 1
+#fi
+#echo "$SANTAINSTALLDIR"
+#echo "$TDAGENTINSTALLDIR"
+
+#Install binaries
+
+yes | hdiutil attach -noverify -nobrowse -mountpoint $TDAGENTINSTALLDIR/mount $TDAGENTINSTALLDIR/td-agent-$TDAGENTVER.dmg
+installer -pkg "$TDAGENTINSTALLDIR/mount/td-agent-$TDAGENTVER.pkg" -target /
+hdiutil detach -force $TDAGENTINSTALLDIR/mount
+rm -r $TDAGENTINSTALLDIR
+
+yes | hdiutil attach -noverify -nobrowse -mountpoint $SANTAINSTALLDIR/mount $SANTAINSTALLDIR/santa-$SANTAVER.dmg
+installer -pkg "$SANTAINSTALLDIR/mount/santa-$SANTAVER.pkg" -target /
+read -p "Press enter to continue"
+hdiutil detach -force $SANTAINSTALLDIR/mount
+rm -r $SANTAINSTALLDIR
+
+#EQHXZ8M8AV,com.google.santa-driver
+#/usr/bin/sqlite3 -csv /var/db/SystemPolicyConfiguration/KextPolicy "select team_id,bundle_id from kext_policy"

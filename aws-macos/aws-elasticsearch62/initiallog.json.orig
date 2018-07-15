@@ -1,0 +1,3 @@
+{
+  "message": "[2018-03-31T14:20:32.133Z] I santad: action=EXEC|decision=ALLOW|reason=CERT|sha256=e71b093072ef661e88aab666fc4c07d2a44fb601f7c1971fefad721cfe931280|cert_sha256=2aa4b9973b7ba07add447ee4da8b5337c3ee2c3a991911e80e7282e8a751fc32|cert_cn=Software Signing|pid=15420|ppid=15417|uid=0|user=root|gid=0|group=wheel|mode=M|path=/usr/bin/fdesetup|args=/usr/bin/fdesetup hasinstitutionalrecoverykey"
+}

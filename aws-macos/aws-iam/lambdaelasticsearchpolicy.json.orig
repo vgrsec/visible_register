@@ -1,0 +1,21 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "",
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "logs:DescribeLogStreams"
+            ],
+            "Resource": "arn:aws:logs:region:account-id:log-group:*:*:*"
+        },
+        {
+            "Sid": "",
+            "Effect": "Allow",
+            "Action": "es:ESHttpPost",
+            "Resource": "arn:aws:es:region:account-id:*"
+        }
+    ]
+}
